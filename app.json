@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Kambio",
+    "slug": "v-rate",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.giudpc.kambio"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F172A"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.giudpc.kambio"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/03bd6ce6-53aa-4206-95cb-4b5bd86f52ba"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "03bd6ce6-53aa-4206-95cb-4b5bd86f52ba"
+      }
+    }
+  }
+}
