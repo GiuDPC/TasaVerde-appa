@@ -1,13 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || "";
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error("❌ SUPABASE CONFIG ERROR:", {
+    hasUrl: !!SUPABASE_URL,
+    hasKey: !!SUPABASE_ANON_KEY,
+  });
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     storage: AsyncStorage,
     persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
   },
 });
 
@@ -27,7 +37,6 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signInWithGoogle() {
-  // Imports lazy para evitar crash al cargar el modulo
   const AuthSession = require("expo-auth-session");
   const WebBrowser = require("expo-web-browser");
 
@@ -50,7 +59,6 @@ export async function signInWithGoogle() {
 
   if (result.type === "success") {
     const url = result.url;
-    // Parsear tokens del fragment manualmente (React Native no tiene URL API)
     const hashIndex = url.indexOf("#");
     if (hashIndex === -1) return;
 

@@ -101,7 +101,7 @@ function TabNavigator() {
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const { loading, isLoggedIn } = useAuth();
+  const { loading, isLoggedIn, error } = useAuth();
 
   if (showSplash) {
     return (
@@ -118,6 +118,12 @@ export default function App() {
         <ActivityIndicator size="large" color="#10B981" />
       </View>
     );
+  }
+
+  // Mostrar error si hay problemas de inicialización
+  if (error) {
+    console.error("🔴 App Error:", error);
+    // Continuar a AuthScreen incluso con error
   }
 
   if (!isLoggedIn) {
