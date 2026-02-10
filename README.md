@@ -1,291 +1,344 @@
-# 💱 Kambio
+# TasaVerde
 
-Aplicación móvil para consultar tasas de cambio del Bolívar venezolano en tiempo real. Compara automáticamente BCV (Banco Central de Venezuela) con Binance P2P.
+Real-time Venezuelan Bolivar exchange rate application. Compares BCV (Central Bank of Venezuela) with Binance P2P automatically.
 
-## 📋 Tabla de Contenidos
+![React Native](https://img.shields.io/badge/React_Native-20232A?logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)
 
-- [Características](#características)
-- [Tecnologías](#tecnologías)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Instalación](#instalación)
-- [Actualizaciones OTA](#actualizaciones-ota)
+---
+
+## Table of Contents
+
+- [About](#about)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Installation](#installation)
 - [API Endpoints](#api-endpoints)
-- [Comandos Útiles](#comandos-útiles)
-- [Distribución](#distribución)
+- [Deployment](#deployment)
 
 ---
 
-## ✨ Características
+## About
 
-### 📊 Pantalla de Tasas
+TasaVerde solves the daily problem Venezuelans face: finding the best exchange rate. Instead of checking multiple sources (BCV website, Binance, Instagram), users get everything in one app with automatic updates every 15 minutes.
 
-- Tasa BCV Dólar y Euro en tiempo real
-- Tasa Binance P2P
-- Indicador de mejor opción
-- Comparación porcentual entre tasas
-- Pull-to-refresh para actualizar
+### Key Highlights
 
-### 🧮 Calculadora
-
-- Conversión bidireccional USD ↔ Bs
-- Formato automático con separadores de miles (3.500,00)
-- Botón copiar para Pago Móvil
-- Feedback háptico en interacciones
-
-### 📈 Historial
-
-- Gráfico SVG de evolución de tasas
-- Selector de período (7, 30, 90 días)
-- Estadísticas: mínimo, máximo, promedio
-- Tendencia con porcentaje de cambio
-
-### 🔔 Alertas
-
-- Crear alertas personalizadas
-- Tipos: "Si sube a X" o "Si baja a X"
-- Persistencia local con AsyncStorage
-- Verificación automática al actualizar tasas
+- Real-time BCV and Binance P2P rates
+- Automatic best option detection
+- Built-in calculator with Pago Movil formatting
+- Historical charts (7, 30, 90 days)
+- Custom price alerts
+- Authentication with Supabase (email/password + Google OAuth)
+- Over-the-Air updates (no APK reinstall needed for most changes)
 
 ---
 
-## 🛠️ Tecnologías
+## Screenshots
 
-### Frontend (App Móvil)
+### Login Screen
 
-| Tecnología       | Uso                 |
-| ---------------- | ------------------- |
-| Expo SDK 52      | Framework base      |
-| React Navigation | Navegación por tabs |
-| TanStack Query   | Cache y fetching    |
-| react-native-svg | Iconos y gráficos   |
-| expo-haptics     | Feedback táctil     |
-| expo-clipboard   | Copiar resultados   |
-| expo-updates     | Actualizaciones OTA |
-| AsyncStorage     | Persistencia local  |
+![Login](docs/screenshots/Login.png)
 
-### Backend (Servidor)
+### Dashboard
 
-| Tecnología        | Uso                 |
-| ----------------- | ------------------- |
-| Node.js + Express | Servidor HTTP       |
-| Cheerio           | Web scraping BCV    |
-| Axios             | Peticiones HTTP     |
-| CORS              | Seguridad de origen |
+![Dashboard](docs/screenshots/Dashboard.png)
+
+### Calculator
+
+![Calculator](docs/screenshots/Calculator.png)
+
+### Historical Charts
+
+![Graphics](docs/screenshots/Graphics.png)
+
+### Price Alerts
+
+![Alerts](docs/screenshots/Alerts.png)
 
 ---
 
-## 📁 Estructura del Proyecto
+## Features
+
+### Authentication
+
+- Email and password registration/login
+- Google OAuth integration (expo-auth-session)
+- Session persistence with AsyncStorage
+- Secure logout with confirmation
+
+### Dashboard
+
+- BCV USD and EUR rates
+- Binance P2P rate
+- Best option indicator
+- Percentage comparison
+- Pull-to-refresh
+- Last updated timestamp
+
+### Calculator
+
+- Bidirectional USD to Bs conversion
+- Automatic thousands separator (3.500,00)
+- Copy button for Pago Movil
+- Haptic feedback
+
+### Historical Charts
+
+- SVG line charts
+- Period selector (7, 30, 90 days)
+- Min, max, average statistics
+- Trend percentage
+
+### Price Alerts
+
+- Custom alerts: "If price goes above X" or "If price drops below X"
+- Local persistence with AsyncStorage
+- Automatic verification on rate updates
+
+---
+
+## Tech Stack
+
+### Frontend (Mobile App)
+
+| Technology       | Purpose                               |
+| ---------------- | ------------------------------------- |
+| Expo SDK 52      | Base framework                        |
+| React Native     | Cross-platform UI                     |
+| TypeScript       | Type safety                           |
+| React Navigation | Tab navigation                        |
+| TanStack Query   | Data fetching and caching             |
+| Supabase         | Authentication (email + Google OAuth) |
+| react-native-svg | Icons and charts                      |
+| expo-haptics     | Tactile feedback                      |
+| expo-clipboard   | Copy to clipboard                     |
+| expo-updates     | Over-the-Air updates                  |
+| AsyncStorage     | Local persistence                     |
+
+### Backend (Server)
+
+| Technology        | Purpose               |
+| ----------------- | --------------------- |
+| Node.js + Express | HTTP server           |
+| TypeScript        | Type safety           |
+| Cheerio           | BCV web scraping      |
+| Axios             | HTTP requests         |
+| CORS              | Cross-origin security |
+
+### Authentication
+
+| Service              | Purpose                               |
+| -------------------- | ------------------------------------- |
+| Supabase             | Auth backend (email/password + OAuth) |
+| Google Cloud Console | OAuth 2.0 credentials                 |
+| expo-auth-session    | OAuth flow handling                   |
+| expo-web-browser     | Secure browser for OAuth              |
+
+---
+
+## Architecture
 
 ```
-kambio/
-├── App.tsx                     # Entry point con navegación
-├── app.json                    # Configuración Expo + OTA
-├── eas.json                    # Configuración EAS Build
-├── package.json                # Dependencias
-│
-├── src/                        # Código fuente frontend
-│   ├── screens/
-│   │   ├── DashboardScreen.tsx     # Tasas actuales
-│   │   ├── CalculatorScreen.tsx    # Conversor USD/Bs
-│   │   ├── HistoryScreen.tsx       # Gráficos históricos
-│   │   └── AlertsScreen.tsx        # Sistema de alertas
-│   │
-│   ├── components/
-│   │   ├── Icon.tsx                # Iconos SVG
-│   │   ├── SplashScreen.tsx        # Pantalla de inicio
-│   │   ├── AnimatedComponents.tsx  # Animaciones
-│   │   └── SkeletonLoader.tsx      # Loading premium
-│   │
-│   ├── hooks/
-│   │   ├── useRates.ts             # Hook para tasas
-│   │   └── useHistory.ts           # Hook para historial
-│   │
-│   └── services/
-│       └── api.ts                  # Cliente HTTP
-│
-├── server/                     # Backend Node.js
-│   ├── index.js                    # Servidor Express
-│   ├── data/
-│   │   └── history.json            # Historial guardado
-│   └── services/
-│       ├── bcv.js                  # Scraper BCV
-│       ├── binance.js              # API Binance P2P
-│       └── history.js              # Gestión de historial
-│
-├── assets/                     # Recursos estáticos
-│   ├── icon.png                    # Logo de la app
-│   ├── adaptive-icon.png           # Icono adaptativo Android
-│   ├── splash-icon.png             # Pantalla de carga
-│   └── icons/                      # SVGs personalizados
-│
-└── .agent/workflows/           # Estándares de desarrollo
-    └── react-native-expo-standard.md
+┌─────────────────────────────────────────────────────────────┐
+│                     Mobile App (Expo)                       │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │  Auth    │  │Dashboard │  │Calculator│  │ History  │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+└───────┼─────────────┼─────────────┼─────────────┼───────────┘
+        │             │             │             │
+        ├─────────────┴──────┬──────┴─────────────┘
+        │                    │
+   ┌────▼────┐         ┌─────▼──────┐
+   │Supabase │         │  Backend   │
+   │  Auth   │         │  (Express) │
+   └─────────┘         └─────┬──────┘
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+              ┌─────▼─────┐     ┌─────▼─────┐
+              │ BCV Site  │     │ Binance   │
+              │(Scraping) │     │ P2P API   │
+              └───────────┘     └───────────┘
 ```
+
+### Data Flow
+
+1. **Authentication**: User logs in via Supabase (email/password or Google OAuth)
+2. **Rate Fetching**: Backend scrapes BCV every 15 minutes, calls Binance API
+3. **Caching**: Backend caches rates in memory for instant responses
+4. **App Updates**: Mobile app fetches `/api/rates` and caches with TanStack Query
+5. **Historical Data**: Backend stores daily snapshots in `history.json`
 
 ---
 
-## 🚀 Instalación
+## Installation
 
-### Requisitos
+### Prerequisites
 
 - Node.js 18+
-- npm
-- Expo Go (en dispositivo móvil) o emulador
+- npm or pnpm
+- Expo Go app (on mobile device) or Android emulator
 
-### Backend Local
+### Backend Setup
 
 ```bash
 cd server
 npm install
-node index.js
-# Servidor en http://localhost:3000
+
+# Create .env file
+echo "PORT=3000" > .env
+
+# Start server
+npm run dev
+# Server running at http://localhost:3000
 ```
 
-### Frontend Local
+### Frontend Setup
 
 ```bash
 npm install
+
+# Create .env file with Supabase credentials
+echo "EXPO_PUBLIC_SUPABASE_URL=your_supabase_url" > .env
+echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key" >> .env
+
+# Start Expo
 npx expo start
-# Escanear QR con Expo Go
+# Scan QR code with Expo Go
 ```
+
+### Supabase Configuration
+
+1. Create project at [supabase.com](https://supabase.com)
+2. Get URL and anon key from Settings > API
+3. Enable Email provider in Authentication > Providers
+4. (Optional) Configure Google OAuth:
+   - Create OAuth credentials in Google Cloud Console
+   - Add redirect URI: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
+   - Paste Client ID and Secret in Supabase Google provider
 
 ---
 
-## 📲 Actualizaciones OTA (Over-the-Air)
+## API Endpoints
 
-### ⚡ ¿Qué se actualiza automáticamente?
+| Endpoint              | Method | Description                         |
+| --------------------- | ------ | ----------------------------------- |
+| `/api/rates`          | GET    | Current BCV and Binance rates       |
+| `/api/history?days=7` | GET    | Historical data (7, 30, or 90 days) |
+| `/api/trend?days=7`   | GET    | Trend percentage only               |
 
-| Tipo de Cambio              | Actualización Automática | Requiere Nuevo APK |
-| --------------------------- | ------------------------ | ------------------ |
-| Colores, estilos, textos    | ✅ SÍ                    | ❌ NO              |
-| Nuevas pantallas            | ✅ SÍ                    | ❌ NO              |
-| Lógica de negocio (JS)      | ✅ SÍ                    | ❌ NO              |
-| Corrección de bugs          | ✅ SÍ                    | ❌ NO              |
-| Nuevas dependencias nativas | ❌ NO                    | ✅ SÍ              |
-| Cámara, mapas, sensores     | ❌ NO                    | ✅ SÍ              |
-| Cambios en app.json         | ❌ NO                    | ✅ SÍ              |
-
-### 🔄 Cómo publicar una actualización OTA
-
-Después de hacer cambios en el código:
-
-```bash
-# Publicar actualización al branch preview
-eas update --branch preview --message "Descripción de los cambios"
-```
-
-**¿Qué pasa después?**
-
-1. La actualización se sube a los servidores de Expo
-2. Cuando los usuarios abran la app, se descarga automáticamente
-3. Al reiniciar la app, ven la nueva versión
-
-### 📦 Cuándo generar nuevo APK
-
-Solo cuando:
-
-- Agregues librerías nativas (cámara, mapas, etc.)
-- Cambies la versión en `app.json`
-- Modifiques configuraciones de Android
-
-```bash
-eas build -p android --profile preview --clear-cache
-```
-
----
-
-## 🌐 API Endpoints
-
-| Endpoint              | Método | Descripción                |
-| --------------------- | ------ | -------------------------- |
-| `/api/rates`          | GET    | Tasas actuales             |
-| `/api/history?days=7` | GET    | Historial (7, 30, 90 días) |
-| `/api/trend?days=7`   | GET    | Solo tendencia             |
-| `/api/health`         | GET    | Estado del servidor        |
-
-### Ejemplo de Respuesta `/api/rates`
+### Example Response: `/api/rates`
 
 ```json
 {
   "bcv": {
-    "usd": 370.25,
-    "eur": 440.48
+    "usd": 37.25,
+    "eur": 44.48,
+    "date": "2024-02-09"
   },
-  "binance": 497.12,
+  "binance": 49.12,
   "bestOption": "bcv",
-  "lastUpdated": "2024-01-31T20:00:00Z"
+  "lastUpdated": "2024-02-09T20:00:00Z"
 }
 ```
 
 ---
 
-## ⚙️ Comandos Útiles
+## Deployment
 
-### 🧹 Limpieza Nuclear (Si algo falla)
+### Backend (Render / Railway / Fly.io)
 
-```powershell
-Remove-Item -Recurse -Force node_modules
-Remove-Item package-lock.json
-npm install
-npx expo install --fix
-```
+1. Connect GitHub repository
+2. Set environment variables:
+   - `PORT=3000`
+3. Deploy with `npm run dev`
 
-### 🏗️ Build APK
+### Mobile App (EAS Build)
 
-```bash
-# Build limpio con cache vacío
-eas build -p android --profile preview --clear-cache
-```
-
-### 🔄 Publicar Actualización OTA
+#### Generate APK
 
 ```bash
-eas update --branch preview --message "Descripción del cambio"
+npx eas-cli build -p android --profile preview
 ```
 
-### 🧪 Desarrollo Local
+Build takes ~10-15 minutes. Download APK from the provided link.
+
+#### Over-the-Air Updates
+
+For JavaScript/styling changes (no new native dependencies):
 
 ```bash
-# Terminal 1: Backend
-cd server && node index.js
+eas update --branch preview --message "Description of changes"
+```
 
-# Terminal 2: Frontend
-npx expo start
+Users get the update automatically on next app launch.
+
+---
+
+## Project Structure
+
+```
+TasaVerde/
+├── App.tsx                     # Entry point with navigation
+├── app.json                    # Expo configuration
+├── eas.json                    # EAS Build configuration
+├── package.json                # Dependencies
+│
+├── src/                        # Frontend source code
+│   ├── screens/
+│   │   ├── AuthScreen.tsx          # Login/Register
+│   │   ├── DashboardScreen.tsx     # Current rates
+│   │   ├── CalculatorScreen.tsx    # USD/Bs converter
+│   │   ├── HistoryScreen.tsx       # Historical charts
+│   │   └── AlertsScreen.tsx        # Price alerts
+│   │
+│   ├── components/
+│   │   ├── Icon.tsx                # SVG icon system
+│   │   ├── SplashScreen.tsx        # Loading screen
+│   │   ├── AnimatedComponents.tsx  # Animations
+│   │   └── SkeletonLoader.tsx      # Loading skeletons
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts              # Authentication hook
+│   │   ├── useRates.ts             # Rates fetching hook
+│   │   └── useHistory.ts           # Historical data hook
+│   │
+│   └── services/
+│       ├── supabase.ts             # Supabase client + auth
+│       └── api.ts                  # HTTP client
+│
+├── server/                     # Backend Node.js
+│   ├── src/
+│   │   ├── index.ts                # Express server
+│   │   └── services/
+│   │       ├── bcv.ts              # BCV scraper
+│   │       ├── binance.ts          # Binance P2P API
+│   │       └── history.ts          # Historical data manager
+│   │
+│   └── data/
+│       └── history.json            # Stored historical rates
+│
+├── assets/                     # Static resources
+│   ├── icon.png                    # App icon
+│   ├── adaptive-icon.png           # Android adaptive icon
+│   ├── splash-icon.png             # Splash screen
+│   └── icons/                      # Custom SVG icons
+│
+└── docs/
+    └── screenshots/                # App screenshots
 ```
 
 ---
 
-## 📤 Distribución
+## License
 
-### Configuración Actual
-
-| Campo        | Valor                                                   |
-| ------------ | ------------------------------------------------------- |
-| Nombre       | Kambio                                                  |
-| Package      | com.giudpc.kambio                                       |
-| Proyecto EAS | v-rate                                                  |
-| OTA URL      | https://u.expo.dev/03bd6ce6-53aa-4206-95cb-4b5bd86f52ba |
-
-### Backend en Producción
-
-El servidor está desplegado en Render.com. Para evitar cold starts:
-
-- Configurar un cron-job externo cada 10-14 minutos
-- Usar UptimeRobot o cron-job.org para ping automático
-
-### Flujo de Trabajo
-
-1. **Desarrollo**: Hacer cambios localmente
-2. **Testing**: Probar con `npx expo start`
-3. **Actualización JS**: `eas update --branch preview`
-4. **Actualización Nativa**: `eas build -p android --profile preview`
+Private project for personal and family use.
 
 ---
 
-## 📜 Licencia
-
-Proyecto privado para uso personal y familiar.
-
----
-
-**Desarrollado con ❤️ usando Expo y React Native**
+**Developed with Expo and React Native**
