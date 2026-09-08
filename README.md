@@ -138,4 +138,5 @@ TasaVerde/
 
 ## License
 
-Private project for personal and family use.
+Proyecto personal — desarrollado con fines de demostración técnica y portafolio.
+
